@@ -1,6 +1,9 @@
 import os
 import telebot
 import requests
+from flask import Flask
+import threading
+import os
 
 BOT_TOKEN = os.environ.get("BOT_TOKEN")
 API_KEY = os.environ.get("API_KEY")
@@ -31,4 +34,16 @@ def handle_message(message):
     bot.send_message(message.chat.id, answer)
 
 print("Бот запущен...")
+app = Flask(__name__)
+
+@app.route('/')
+def health():
+    return "OK"
+
+def run_web():
+    port = int(os.environ.get("PORT", 3000))
+
+    app.run(host="0.0.0.0", port=port)
+
+threading.Thread(target=run_web, daemon=True).start()
 bot.polling(none_stop=True)
